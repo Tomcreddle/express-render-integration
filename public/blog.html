@@ -3,25 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Page</title>
+    <title>Blog</title>
 </head>
 <body>
     <h1>Blog Posts</h1>
     <div id="blog-container"></div>
 
     <script>
-        // Fetch blog posts from the server
         fetch('/blog')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to fetch blog posts');
+                return response.json();
+            })
             .then(posts => {
+                console.log(posts); // Debugging step
                 const container = document.getElementById('blog-container');
+                container.innerHTML = ''; // Clear previous content
                 posts.forEach(post => {
                     const postElement = document.createElement('div');
                     postElement.innerHTML = `<h2>${post.title}</h2><p>${post.content}</p>`;
                     container.appendChild(postElement);
                 });
             })
-            .catch(error => console.error('Error loading blog posts:', error));
+            .catch(error => console.error('Error loading posts:', error));
     </script>
 </body>
 </html>
+
